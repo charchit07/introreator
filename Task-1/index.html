@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Table</title>
+    <!-- Include Bootstrap for styling -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wy7uQ3zSfF8E5eg6aspjC8N9eD6I5j9em"
+      crossorigin="anonymous" />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-12">
+          <h1 class="mb-4">Data Table</h1>
+          <div id="root"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Include Babel for JSX transformation -->
+    <script
+      crossorigin
+      src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- Include React and ReactDOM -->
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <script type="text/babel">
+      // Define a functional component representing an editable table row
+      function EditableRow({ data, onChange }) {
+        const handleInputChange = (e, key) => {
+          const newData = { ...data, [key]: e.target.value };
+          onChange(newData);
+        };
+
+        return (
+          <div className="table-responsive" key={data.id}>
+            <table className="table">
+              <tbody className="table-bordered">
+                <tr>
+                  <td><label className="mr-2">Name:</label></td>
+                  <td><input className="form-control mb-2" type="text" value={data.name} onChange={(e) => handleInputChange(e, "name")} /></td>
+                </tr>
+                <tr>
+                  <td><label className="mr-2">Age:</label></td>
+                  <td><input className="form-control mb-2" type="text" value={data.age} onChange={(e) => handleInputChange(e, "age")} /></td>
+                </tr>
+                <tr>
+                  <td><label className="mr-2">City:</label></td>
+                  <td><input className="form-control mb-2" type="text" value={data.city} onChange={(e) => handleInputChange(e, "city")} /></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        );
+      }
+
+      // Define the main App component
+      function App() {
+        const initialData = [
+          { id: 1, name: "Charchit", age: "28", city: "Mumbai" },
+          { id: 2, name: "Ronaldo", age: "38", city: "Portugal" },
+          { id: 3, name: "Virat", age: "35", city: "Delhi" },
+        ];
+
+        const [tableData, setTableData] = React.useState(initialData);
+
+        const handleChange = (rowData) => {
+          const newData = tableData.map((item) =>
+            item.id === rowData.id ? rowData : item
+          );
+          setTableData(newData);
+        };
+
+        const handlePost = () => {
+          // Here you can implement logic to post data to the API
+          // For now, just logging the data to the console
+          console.log("Data to be posted:", tableData);
+        };
+
+        return (
+          <div>
+            {tableData.map((row) => (
+              <EditableRow key={row.id} data={row} onChange={handleChange} />
+            ))}
+            <button className="btn btn-primary" onClick={handlePost}>
+              Send Data
+            </button>
+          </div>
+        );
+      }
+
+      // Render the App component into the root element
+      ReactDOM.render(<App />, document.getElementById("root"));
+    </script>
+  </body>
+</html>
